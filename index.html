@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Something is coming✨</title>
+        <style>
+            :root {
+  --bg-dark: #0f0b14;
+  --pink: #ff7ac8;
+  --purple: #b983ff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1a1325, var(--bg-dark));
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.countdown-container {
+  text-align: center;
+  padding: 20px;
+  max-width: 360px;
+  width: 100%;
+}
+
+.title {
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+  background: linear-gradient(90deg, var(--pink), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.timer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.timer div {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 12px;
+  width: 22%;
+}
+
+.timer span {
+  font-size: 1.6rem;
+  display: block;
+}
+
+.timer small {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.reveal-btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.95rem;
+  background: linear-gradient(90deg, var(--pink), var(--purple));
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.reveal-btn.active {
+  cursor: pointer;
+  opacity: 1;
+}
+
+        </style>
+
+</head>
+<body>
+     <main class="countdown-container">
+    <h1 class="title" id="dpmsg">Counting down to something special 💖</h1>
+
+    <div id="timer" class="timer">
+      <div><span id="days">00</span><small>Days</small></div>
+      <div><span id="hours">00</span><small>Hours</small></div>
+      <div><span id="minutes">00</span><small>Minutes</small></div>
+      <div><span id="seconds">00</span><small>Seconds</small></div>
+    </div>
+
+    <button id="revealBtn" class="reveal-btn" disabled>
+      ⏳ Come back after the countdown
+    </button>
+  </main>
+
+
+
+    <script>
+
+const daysEl = document.getElementById("days");
+const hoursEl = document.getElementById("hours");
+const minutesEl = document.getElementById("minutes");
+const secondsEl = document.getElementById("seconds");
+const msgEl = document.getElementById("dpmsg");
+const revealBtn = document.getElementById("revealBtn");
+
+
+let countdownFinished = false;
+const targetLink = "land.html";
+const targetDay = 9;
+
+function calculateDaysRemaining() {
+   
+    const now = new Date(); 
+    const todayDay = now.getDate();
+    const todayMonth = now.getMonth();
+
+    if (todayMonth === 0) {
+        
+        const daysLeftJan = 31 - todayDay;
+        return daysLeftJan + (targetDay -1);
+    } else if (todayMonth === 1) {
+
+        return targetDay - todayDay -1;
+    } else {
+        return 0;
+    }
+}
+
+
+function getTimeToMidnight() {
+    const now = new Date();
+    
+    const nextMidnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        0, 0, 0
+    );
+
+    const diff = nextMidnight - now; 
+
+    return {
+        hours: Math.floor(diff / (1000 * 60 * 60)),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60)
+    };
+}
+
+daysEl.textContent = calculateDaysRemaining();
+const time = getTimeToMidnight();
+hoursEl.textContent = String(time.hours).padStart(2, "0");
+minutesEl.textContent = String(time.minutes).padStart(2, "0");
+secondsEl.textContent = String(time.seconds).padStart(2, "0");
+
+setInterval(() => {
+    const now = new Date();
+    const todayDay = now.getDate();
+    const todayMonth = now.getMonth();
+
+    if (hoursEl.textContent === "00" && minutesEl.textContent === "00" && secondsEl.textContent === "00") {
+        const newDays = calculateDaysRemaining();
+        daysEl.textContent = newDays;
+    }
+
+    const time = getTimeToMidnight();
+    hoursEl.textContent = String(time.hours).padStart(2, "0");
+    minutesEl.textContent = String(time.minutes).padStart(2, "0");
+    secondsEl.textContent = String(time.seconds).padStart(2, "0");
+
+    if (todayMonth === 1 && todayDay === targetDay) {
+        daysEl.textContent = 0;
+        msgEl.textContent = "🎉 Happy Birthday! 💖";
+
+        revealBtn.textContent = "🎉 Click for your surprise!";
+        revealBtn.classList.add("active");
+        revealBtn.disabled = false;
+        if (!revealBtn.dataset.added) {
+            revealBtn.addEventListener("click", () => {
+                window.location.href = targetLink;
+            });
+            revealBtn.dataset.added = "true";
+        }
+    }
+}, 1000);
+
+
+        </script>
+
+  
+</body>
+</html>
